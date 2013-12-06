@@ -1,16 +1,17 @@
 (ns editorial.core
   (:gen-class)
   (:require [clojure.tools.cli :as c]
-            [editorial.templates :as templates]))
+            [editorial.templates :as templates]
+            [editorial.content :as content]))
 
-(defn editorial
-  "generate editorial content for the given urls"
-  ([templates urls]
-   nil)
-
-  ([urls]
-   (let [templates []
-
+(defn editorial-content
+  "fetch some content from the web and generates some articles based on the
+  given template function."
+  [templates urls]
+  (let [user-agent "mtrip content generator (pelletier@mtrip.com)"
+        sources-data "lol" ]
+    {:articles 
+     {:general-information "bla bla bla"}}))
 
 (defn -main
   "Generate editorial content given lists of url."
@@ -29,5 +30,5 @@
       (println "v-0.1-alpha")
       (System/exit 0))
 
-    (println "hello world")))
+    (println (editorial-content "hello world" "from me"))))
 

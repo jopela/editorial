@@ -13,9 +13,12 @@
    :general           "General Information"
    :shopping          "Shopping"})
 
+; example of a logical category.
 (def logical-cat 
   {#{"History" "Historia" "Histoire"} :history})
 
+; supporting all language is looking up in a function that always return
+; true.
 (defn all-languages
   [& args]
   true)
@@ -39,7 +42,7 @@
   [sources]
   {:general_information "gen-info"})
 
-(defn 
+(defn supercats
   "create the general information template from a collection of sources"
   [sources]
   {:general_information "gen-info"})
