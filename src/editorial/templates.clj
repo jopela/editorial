@@ -14,7 +14,6 @@
    :shopping          "Shopping"})
 
 (defn template-article
-  "extract the article bits from the data structure"
   [kw articles-data]
   (let [articles (map :article articles-data)]
     {kw articles}))
