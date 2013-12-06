@@ -2,16 +2,27 @@
   (:gen-class)
   (:require [clojure.tools.cli :as c]
             [editorial.templates :as templates]
-            [editorial.content :as content]))
+            [editorial.content :as content]
+            ))
+
+(def urls ["http://en.wikipedia.org/wiki/Montreal"
+           "http://en.wikivoyage.org/wiki/Montreal"
+           "http://en.wikipedia.org/wiki/S-expression"])
 
 (defn editorial-content
   "fetch some content from the web and generates some articles based on the
   given template function."
-  [templates urls]
-  (let [user-agent "mtrip content generator (pelletier@mtrip.com)"
-        sources-data "lol" ]
-    {:articles 
-     {:general-information "bla bla bla"}}))
+  ([templates urls]
+    (let [articles-data (->> urls
+                             (map content/source-data)
+                             (filter #(not (contains? % :error))))
+
+          rendering (apply juxt templates)]
+      {:articles (apply merge (rendering articles-data))}))
+
+  ([urls]
+   (let [temps [templates/general-information]]
+     (editorial-content temps urls))))
 
 (defn -main
   "Generate editorial content given lists of url."
@@ -30,5 +41,6 @@
       (println "v-0.1-alpha")
       (System/exit 0))
 
-    (println (editorial-content "hello world" "from me"))))
+    (println (editorial-content urls))))
+
 
