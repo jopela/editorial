@@ -6,6 +6,8 @@
 
 ; The different article categories. There should be 1 template for each
 ; categories.
+;
+; TODO: implement a partial evaluator in wikison?
 
 (def categories
   {:drinking          "Drinking & Nightlife"
@@ -33,17 +35,21 @@
 (def languages
   #{"en" "it" "fr" "pt" "ar" "nl" "ko" "ru" "pl"})
 
+(defn merge-section
+  "function to merge section"
+  [& args]
+  (first args))
+  
 ; this function will use the manual function mapping to get right category
 ; for the content of a section. Hopefully, this could be replaced with some
 ; supervised machine learning function in the future.
-(defn logical-extract-manual
+(defn logical-extract
   "'manually' extract the logical section text from an article-data. So
   given :history it would return something like {:en {:text 'super text' 
   :title 'historia'}" 
   [logical-section tree]
   (let [concrete-section-title (sections-mapping logical-section)]
     (loop [cur 
-
 
 (defn template-article-dic
   "map the article-data into a dictionary data structure that fits the current
@@ -57,7 +63,6 @@
          left sections]
     (if-let [section (first left)]
       (let [logical-secs (map #(logical-extract-manual section (:article %)))] 
-        (recur (assoc-in section
-
+        (recur (assoc res section (apply (partial merge-with merge-section) logical-secs)) (rest left)))
       {title res})))
 
