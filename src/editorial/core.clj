@@ -5,6 +5,13 @@
             [editorial.content :as content]
             ))
 
+; This is admitedly 'complex' code in the sence that it is not simple (it's
+; compounded with lot's of stuff). For example, representation is chosen
+; inside the template function (data is directly casted in a tree-like 
+; dictionary data structure) so templates are completely format dependant.
+; Sadly, this is the only solution I could come up with in the allocated time 
+; frame. Hope this complexity will not bite me later on ...
+
 (def urls ["http://en.wikipedia.org/wiki/Montreal"
            "http://en.wikivoyage.org/wiki/Montreal"
            "http://en.wikipedia.org/wiki/S-expression"])
