@@ -36,7 +36,8 @@
 (defn merge-section
   "function to merge section"
   [& args]
-  (first args))
+  (letfn [(text-count[arg] (-> arg :text count))]
+    (apply (partial max-key text-count) args)))
   
 (defn logical-extract
   "'manually' extract the logical section text from an article-data. So
@@ -64,6 +65,8 @@
                                                          z/node)}
               (z/end? cur) nil
               :else (recur (z/next cur)))))))
+
+(def not-nil? (complement nil?))
         
 (defn template-article-dic
   "map the article-data into a dictionary data structure that fits the current
@@ -80,12 +83,20 @@
                                :let [lang (x :lang) 
                                      sec (logical-extract 
                                            section 
-                                           (x :article))]]
-                           {lang sec})]
-        (recur (assoc res
+                                           (x :article))] 
+                               :when (not-nil? sec)] {lang sec})]
+        (cond
+          (= 0 (count logical-secs)) (recur res (rest left))
+          :else (recur (assoc res
                        section (apply (partial merge-with merge-section) 
-                                      (second logical-secs))) (rest left)))
+                                      logical-secs)) (rest left))))
       {title res})))
+
+(def test-template (partial template-article-dic 
+                            "General_Information"
+                            [:understand :history :do]
+                            ["en" "fr" "pt"]))
+
 
 (defn general-information
   "the general information editorial content template."

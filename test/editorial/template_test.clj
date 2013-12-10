@@ -35,10 +35,51 @@
           ou (logical-extract :understand in)]
       (is (= ex ou)))))
 
+(deftest merge-section-test-1
+  (testing "longest section should make it back"
+    (let  [ex {:title "s1" :text "text++"}
+           ou (merge-section {:title "s1" :text "text"} 
+                            {:title "s1" :text "text++"})]
+      (is (= ex ou)))))
 
 (def articles-data 
-  [ {:lang "en"
+  [{:lang "en"
      :article [:article 
                [:abstract "text"]
-               [:
+               [:sections
+                [:section
+                 [:title " Understand "]
+                 [:text "understand"]]
+                [:section
+                 [:title " History "]
+                 [:text "history"]]
+                [:section
+                 [:title " Do "]
+                 [:text "do"]]]]}
+   {:lang "en"
+    :article [:article 
+               [:abstract "text"]
+               [:sections
+                [:section
+                 [:title " Understand "]
+                 [:text "understand++"]]
+                [:section
+                 [:title " Voyager "]
+                 [:text "voyager"]]
+                [:section
+                 [:title " Cossin "]
+                 [:text "do"]]]]}])
+
+(deftest template-article-dic-test-1
+  (testing "when 2 section could make it into the final content, must pick
+           the longest one"
+    (let [in articles-data
+          ex {"General_Information" {:understand {"en" {:title " Understand "
+                                                        :text "understand++"}}
+                                     :history {"en" {:title " History "
+                                                     :text "history"}}
+                                     :do {"en" {:title " Do "
+                                                :text "do"}}}}
+          ou (test-template articles-data)]
+      (is (= ex ou)))))
 
