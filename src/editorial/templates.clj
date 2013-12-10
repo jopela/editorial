@@ -46,13 +46,11 @@
    }
    {
     :title "Practical_Information"
-    :sections [:public-transport 
-               :tourist-information
-               :orientation
+    :sections [
                :get-in
-               :talk 
+               :learn
+               :connect
                :transportation
-               :with-children
                ]
    }
 ])
