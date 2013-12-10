@@ -27,7 +27,35 @@
 ; TODO: load this from file
 ; order of the logical section.
 (def template-def
-  {"General_Information" [:introduction :understand :do]})
+  [
+   {
+    :title "General_Information"
+    :sections [:introduction :understand :do]
+   }
+   {
+    :title "Shopping"
+    :sections [:buy]
+   }
+   {
+    :title "Drinking_&_Nightlife"
+    :sections [:drink]
+   }
+   {
+    :title "Restaurants"
+    :sections [:eat]
+   }
+   {
+    :title "Practical_Information"
+    :sections [:public-transport 
+               :tourist-information
+               :orientation
+               :get-in
+               :talk 
+               :transportation
+               :with-children
+               ]
+   }
+])
 
 ; TODO: load from file? this all seems to be configuration stuff.
 (def languages

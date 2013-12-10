@@ -3,7 +3,7 @@
   (:require [clojure.tools.cli :as c]
             [editorial.templates :as templates]
             [editorial.content :as content]
-            ))
+            [hiccup.core :as h]))
 
 ; This is admitedly 'complex' code in the sence that it is not simple (it's
 ; compounded with lot's of stuff). For example, representation is chosen
