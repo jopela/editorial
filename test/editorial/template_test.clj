@@ -15,11 +15,11 @@
 
 (def logical-extract-tree-2
   [:article
-   [:abstract "intro"
-    [:sections
-     [:section
-      [:title " Comprendre "]
-      [:text "vous devez comprendre"]]]]])
+   [:abstract "intro"]
+   [:sections
+    [:section
+     [:title " Comprendre "]
+     [:text "vous devez comprendre"]]]])
       
 (deftest logical-extract-test-1
   (testing "should extract the history section when it is present"
@@ -30,5 +30,15 @@
 
 (deftest logical-extract-test-2
   (testing "should extract the understand section when it is present"
-    (let [in logical
+    (let [in logical-extract-tree-2
+          ex {:title " Comprendre " :text "vous devez comprendre"}
+          ou (logical-extract :understand in)]
+      (is (= ex ou)))))
+
+
+(def articles-data 
+  [ {:lang "en"
+     :article [:article 
+               [:abstract "text"]
+               [:
 

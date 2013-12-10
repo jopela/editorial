@@ -53,18 +53,10 @@
                     z/node
                     string/trim
                     string/lower-case
-                    logical-section-mapping)) {:title (-> cur
-                                                          z/right
-                                                          z/node)
-                                               :text (-> cur 
-                                                         z/up
-                                                         z/right
-                                                         z/down
-                                                         z/right
-                                                         z/node)}
-              (z/end? cur) nil
-              :else (recur (z/next cur)))))))
+                    logical-section-mapping)) {:title
+                                                                  (->
         
+
 (defn template-article-dic
   "map the article-data into a dictionary data structure that fits the current
   mtrip representation of editorial content. title is the title given to the
@@ -76,15 +68,8 @@
   (loop [res {} 
          left sections]
     (if-let [section (first left)]
-      (let [logical-secs (for [x articles-data 
-                               :let [lang (x :lang) 
-                                     sec (logical-extract 
-                                           section 
-                                           (x :article))]]
-                           {lang sec})]
-        (recur (assoc res
-                       section (apply (partial merge-with merge-section) 
-                                      (second logical-secs))) (rest left)))
+      (let [logical-secs (map #(logical-extract section (:article %)))] 
+        (recur (assoc res section (apply (partial merge-with merge-section) logical-secs)) (rest left)))
       {title res})))
 
 (defn general-information

@@ -20,11 +20,3 @@
           ou (map source-dispatch in)]
       (is (= ex ou)))))
 
-(deftest article-data-test-1
-  (testing "article that could not be transformed into a usable data structure
-           should not be returned by article-data"
-    (let [in ["http://en.wikipedia.org/wiki/"
-              "http://google.com"]
-          ex 1
-          ou (count (article-data in))]
-      (is (= ex ou)))))
