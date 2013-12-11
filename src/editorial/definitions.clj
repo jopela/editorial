@@ -1,6 +1,4 @@
-(ns 
-  "regroups definitions used throughout the application."
-  editorial.categories)
+(ns editorial.definitions)
 
 ; data structure that describes what the template-articles are in terms of 
 ; content. A template has a title and a list of section that will logically
@@ -10,7 +8,7 @@
 (def templates-description
   [
    {
-    :title "General Information"
+    :title "General_information"
     :sections [
                :introduction
                :understand
@@ -39,26 +37,7 @@
                :the-port
                :theater
                :toponym
-               :urbanism]}
-   
-   {
-    :title "Practical Information"
-    :sections [
-               :get-in
-               :connect
-               :embassies
-               :healthcare
-               :learn
-               :orientation
-               :public-transport
-               :talk
-               :tourist-information
-               :transportation
-               :when-to-go
-               :when-to-visit
-               :with-children
-               :work]}])
-
+               :urbanism]}])
 
 ; map that allows for the mapping between logical section names and their 
 ; names in different language. Content pulled from sources is categorized
@@ -78,27 +57,12 @@
 
    :introduction #{"abstract"}
 
-   :get-in   #{"Come arrivare"
-               "aeropuerto"
-               "aller"
-               "anreise"
-               "arriver"
-               "arriver / se déplacer"
-               "arriveren"
-               "chegar"
-               "come arrivare"
-               "llegar"
-               "s'y rendre"
-               "Как добраться"
-               "get in"}
-
    :with-children #{"with children"}
 
    :arts #{"art" "art dans la ville" "Искусство" "Искусство и культура"}
 
    :history #{"Histoire de Florence" 
               "History" "geschichte"
-              "geschichte"
               "geschichte isfahans"
               "geschichte und stadtgründung"
               "geschiedenis"
@@ -131,7 +95,7 @@
 
   :climate #{"climate" 
              "Klima und Reisezeit" 
-             "clima" "clima" "clima"
+             "clima"
              "climat" "climatología"
              "géographie et climat" "il clima"
              "klima" "klima und geographie"
@@ -145,6 +109,7 @@
              "art, culture and nightlife"
              "art and culture"
              "art et culture"
+             "arte e cultura"
              "arte y cultura"
              "arti, intrattenimento e cultura"
              "arts, culture and heritage"

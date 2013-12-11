@@ -1,7 +1,27 @@
 (ns editorial.template-test
   (:require [clojure.test :refer :all]
-            [editorial.templates :refer :all]))
+            [editorial.templates :refer :all]
+            [clojure.zip :as z]))
+(def sdt-1-in
+  (->[:section
+      [:title "history"]
+      [:text "hist of"]]
+    z/vector-zip
+    z/down
+    z/right
+    z/down))
 
+(def sdt-1-ex
+  {:title "history" :text "hist of"})
+
+(deftest section-dic-test-1
+  (testing "should be able to cast the element of a section into a dictionnaty
+           that has a title and a text elem."
+    (let [in sdt-1-in
+          ex sdt-1-ex 
+          ou (section-dic in)]
+      (is (= ex ou)))))
+           
 (def logical-extract-tree-1
   [:article 
    [:abstract "introduction text"]
@@ -20,19 +40,33 @@
     [:section
      [:title " Comprendre "]
      [:text "vous devez comprendre"]]]])
-      
+
+(def match-logical?-test-1-in-loc
+  (-> [:title " History "]
+      z/vector-zip
+      z/down))
+
+(def match-logical?-test-1-in-section
+  #{"history" "do"})
+
+(deftest match-logical?-test-1
+  (testing "when trimmed lowercase section title match one of the elements
+           of the set, should return true"
+    (is (= true (match-logical? match-logical?-test-1-in-loc
+                                match-logical?-test-1-in-section)))))
+
 (deftest logical-extract-test-1
   (testing "should extract the history section when it is present"
     (let [in logical-extract-tree-1
           ex {:title "history" :text "the history of *thing* is fascinating"}
-          ou (logical-extract :history in)]
+          ou (logical-extract default-section-mapping :history in)]
       (is (= ex ou)))))
 
 (deftest logical-extract-test-2
   (testing "should extract the understand section when it is present"
     (let [in logical-extract-tree-2
           ex {:title " Comprendre " :text "vous devez comprendre"}
-          ou (logical-extract :understand in)]
+          ou (logical-extract default-section-mapping :understand in)]
       (is (= ex ou)))))
 
 (deftest merge-section-test-1
