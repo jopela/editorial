@@ -30,7 +30,26 @@
   [
    {
     :title "General_Information"
-    :sections [:introduction :understand :do]
+    :sections [
+               :introduction 
+               :understand 
+               :culture
+               :food
+               :gastronomy
+               :gay-travelers
+               :districts
+               :do 
+               :arts
+               :festivals
+               :etymology
+               :events
+               :history 
+               _ 
+               :beaches
+               :climate 
+               :with-children
+               
+               ]
    }
    {
     :title "Shopping"
@@ -51,6 +70,10 @@
                :learn
                :connect
                :transportation
+               _
+               _
+               :embassies
+               :connect
                ]
    }
 ])
