@@ -60,9 +60,7 @@
   "map the article-data into a dictionary data structure that fits the current
   mtrip representation of editorial content. title is the title given to the
   template (e.g: General_Information). sections is the ordered list of section
-  for this template (e.g [:introduction :understand ...]. supported-langs is
-  the set of languages for which content will be generated and articles-data
-  is the raw content fetched from the sources."
+  for this template (e.g [:introduction :understand ...]." 
   [title sections articles-data]
   (loop [res {} 
          left sections]
@@ -83,7 +81,7 @@
 
 (def test-template (partial template-article-dic 
                             "General_Information"
-                            [:understand :history :do]
+                            [:understand :history :do :doubitchou]
                             ))
 
 (defn general-information

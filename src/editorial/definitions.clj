@@ -43,7 +43,10 @@
 ; names in different language. Content pulled from sources is categorized
 ; into the right logical section with this mapping. 
 (def logical-section-map
-  {:understand #{"Comprenez" 
+  {
+   :do #{"do" "faire" "a faire"}
+
+   :understand #{"Comprenez" 
                  "comprenda" 
                  "comprendre" 
                  "comprenez" 
