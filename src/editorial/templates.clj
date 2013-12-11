@@ -6,18 +6,6 @@
 
 ; The different article categories. There should be 1 template for each
 ; categories.
-;
-; TODO: implement a partial evaluator in wikison?
-
-(def categories
-  {:drinking          "Drinking & Nightlife"
-   :attraction        "Attraction"
-   :transport         "Transport"
-   :hotel             "Hotel"
-   :practical         "Practical Information"
-   :restaurant        "Restaurant"
-   :ugeneral           "General Information"
-   :shopping          "Shopping"})
 
 (def default-section-mapping (utils/clean-logical-mapping 
                                dfns/logical-section-map))
