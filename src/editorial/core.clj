@@ -25,7 +25,7 @@
                              (filter #(not (contains? % :error))))
 
           rendering (apply juxt templates)]
-      {:articles (apply merge (rendering articles-data))}))
+      (apply merge (rendering articles-data))))
 
   ([urls]
    (let [temps [templates/general-information]]
