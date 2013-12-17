@@ -3,7 +3,8 @@
   (:require [clojure.tools.cli :as c]
             [editorial.templates :as templates]
             [editorial.content :as content]
-            [hiccup.core :as h]))
+            [hiccup.core :as h]
+            [clojure.pprint :as p]))
 
 ; This is admitedly 'complex' code in the sence that it is not simple (it's
 ; compounded with lot's of stuff). For example, representation is chosen
@@ -18,9 +19,11 @@
   ([templates urls]
     (let [articles-data (->> urls
                              (map content/source-data)
-                             (filter #(not (contains? % :error)))  )
+                             (filter (complement (fn [x] (contains? x :error )))))
 
+          
           rendering (apply juxt templates)]
+
       (apply merge (rendering articles-data))))
 
   ([urls]

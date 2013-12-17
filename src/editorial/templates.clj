@@ -67,12 +67,15 @@
                                       logical-secs)) (rest left))))
       {title res})))
 
+; used for testing only
 (def test-template (partial template-article-dic 
                             "General_Information"
-                            [:understand :history :do :doubitchou]
-                            ))
+                            [:understand :history :do :doubitchou]))
 
-(def general-information
-  "the general information editorial content template."
-  (partial template-article-dic "General_Information" [:understand:history :do]))
+; mtrip general information template.
+(def general-information 
+  (partial template-article-dic 
+           "General_Information" [:understand :history :do :climate :arts
+                                  :culture :food]))
+
 

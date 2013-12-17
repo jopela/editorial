@@ -46,6 +46,10 @@
   {
    :do #{"do" "faire" "a faire"}
 
+   :beaches #{"beach" "beaches" "plage"}
+
+   :geography #{"geography" "Géographie"}
+
    :understand #{"Comprenez" 
                  "comprenda" 
                  "comprendre" 
@@ -107,6 +111,8 @@
              "klimatabelle" "Климат"
              "Погода" "气候" "気候"
              "気象" "氣候"}
+
+   :food #{"food" "manger" "eat"}
 
   :culture #{"Kultur und Nachtleben"
              "art, culture and nightlife"
