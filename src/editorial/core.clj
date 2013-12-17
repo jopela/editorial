@@ -12,17 +12,13 @@
 ; Sadly, this is the only solution I could come up with in the allocated time 
 ; frame. Hope this complexity will not bite me later on ...
 
-(def urls ["http://en.wikipedia.org/wiki/Montreal"
-           "http://en.wikivoyage.org/wiki/Montreal"
-           "http://en.wikipedia.org/wiki/S-expression"])
-
 (defn editorial-content
   "fetch some content from the web and generates some articles based on the
   given template function."
   ([templates urls]
     (let [articles-data (->> urls
                              (map content/source-data)
-                             (filter #(not (contains? % :error))))
+                             (filter #(not (contains? % :error)))  )
 
           rendering (apply juxt templates)]
       (apply merge (rendering articles-data))))
@@ -48,6 +44,6 @@
       (println "v-0.1-alpha")
       (System/exit 0))
 
-    (println (editorial-content urls))))
+    (println (editorial-content args))))
 
 

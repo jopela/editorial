@@ -5,7 +5,8 @@
 
 (defn source-dispatch                                                              
     "dispatch function for sources content fetcher"                                  
-    [url]                                                                            
+    [url]
+
     (let [wikimedia #{"wikipedia" "wikivoyage" "wikidata"}                           
           domain (-> url                                                               
                      URL.                                                              

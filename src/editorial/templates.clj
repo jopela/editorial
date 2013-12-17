@@ -72,8 +72,7 @@
                             [:understand :history :do :doubitchou]
                             ))
 
-(defn general-information
+(def general-information
   "the general information editorial content template."
-  [args]
-  {:nothing :yest})
+  (partial template-article-dic "General_Information" [:understand:history :do]))
 
