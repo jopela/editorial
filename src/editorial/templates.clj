@@ -78,4 +78,3 @@
            "General_Information" [:understand :history :do :climate :arts
                                   :culture :food]))
 
-

@@ -2,9 +2,7 @@
   (:gen-class)
   (:require [clojure.tools.cli :as c]
             [editorial.templates :as templates]
-            [editorial.content :as content]
-            [hiccup.core :as h]
-            [clojure.pprint :as p]))
+            [editorial.content :as content]))
 
 ; This is admitedly 'complex' code in the sence that it is not simple (it's
 ; compounded with lot's of stuff). For example, representation is chosen
@@ -21,7 +19,6 @@
                              (map content/source-data)
                              (filter (complement (fn [x] (contains? x :error )))))
 
-          
           rendering (apply juxt templates)]
 
       (apply merge (rendering articles-data))))
@@ -33,7 +30,7 @@
 (defn -main
   "Generate editorial content given lists of url."
   [& args]
-  (let [[opts args banner] 
+  (let [[opts arguments banner] 
         (c/cli args
           ["-h" "--help" "print this help banner and quit" :flag true]
           ["-v" "--version" "print version info" :flag true]
