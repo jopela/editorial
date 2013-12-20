@@ -2,7 +2,8 @@
   (:gen-class)
   (:require [clojure.tools.cli :as c]
             [editorial.templates :as templates]
-            [editorial.content :as content]))
+            [editorial.content :as content]
+            [clojure.data.json :as json]))
 
 ; This is admitedly 'complex' code in the sence that it is not simple (it's
 ; compounded with lot's of stuff). For example, representation is chosen
@@ -43,7 +44,7 @@
     (when (opts :version)
       (println "v-0.1-alpha")
       (System/exit 0))
-
-    (println (editorial-content args))))
+    
+    (println (json/write-str (editorial-content args)))))
 
 
