@@ -12,17 +12,23 @@
 ; Sadly, this is the only solution I could come up with in the allocated time 
 ; frame. Hope this complexity will not bite me later on ...
 
+
+(defn error-report
+  "generates a human readable error report of the result of the editorial
+  content generation."
+  [error-sources]
+  error-sources)
+
 (defn editorial-content
   "fetch some content from the web and generates some articles based on the
   given template function."
   ([templates urls]
-    (let [articles-data (->> urls
-                             (map content/source-data)
-                             (filter (complement (fn [x] (contains? x :error )))))
-
+   (letfn [(error? [x] (contains? x :error))]
+    (let [articles-or-errors (map content/source-data urls)
+          articles-data (filter (complement error?) articles-or-errors)
+          errors (filter error? articles-or-errors)
           rendering (apply juxt templates)]
-
-      (apply merge (rendering articles-data))))
+      [errors (apply merge (rendering articles-data))])))
 
   ([urls]
    (let [temps [templates/general-information]]
@@ -45,6 +51,6 @@
       (println "v-0.1-alpha")
       (System/exit 0))
     
-    (println (json/write-str (editorial-content args)))))
+    (println (json/write-str (second (editorial-content args))))))
 
 
