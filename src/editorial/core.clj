@@ -3,21 +3,17 @@
   (:require [clojure.tools.cli :as c]
             [editorial.templates :as templates]
             [editorial.content :as content]
-            [clojure.data.json :as json]))
+            [clojure.data.json :as json]
+            [taoensso.timbre :as timbre]))
 
-; This is admitedly 'complex' code in the sence that it is not simple (it's
-; compounded with lot's of stuff). For example, representation is chosen
-; inside the template function (data is directly casted in a tree-like 
-; dictionary data structure) so templates are completely format dependant.
-; Sadly, this is the only solution I could come up with in the allocated time 
-; frame. Hope this complexity will not bite me later on ...
-
+(timbre/refer-timbre)
 
 (defn error-report
   "generates a human readable error report of the result of the editorial
   content generation."
   [error-sources]
-  error-sources)
+  (doseq [e error-sources]
+    (error (str (e :error) "\n"))))
 
 (defn editorial-content
   "fetch some content from the web and generates some articles based on the
@@ -43,12 +39,15 @@
 (def cli-options
   [["-h" "--help" "prints an help message and quit"]
    ["-v" "--version" "print the current version number and quit"]
-   ["-u" "--user-agent AGENT" "the user-agent string that will be used for http requests (e.g: my-tool v0.1.1 (my@email.com))"]])
+   ["-u" "--user-agent AGENT" "the user-agent string that will be used for http requests (e.g: my-tool v0.1.1 (my@email.com))"]
+   ["-l" "--log-file PATH" "the path to tge log file. Defaults to /var/log/editorial.log" :default "/var/log/editorial.log" ]])
 
 (defn -main
   "Generate editorial content given lists of url."
   [& args]
-  (let [{:keys [options arguments summary errors]} (c/parse-opts args cli-options)]
+  
+  (let [{:keys [options arguments summary errors]} 
+        (c/parse-opts args cli-options)]
 
     (when (options :help)
       (println summary)
@@ -62,9 +61,16 @@
       (println "you must specify a user-agent string with --user-agent.")
       (System/exit 0))
     
-    (println (c/parse-opts args cli-options))
-    (println (json/write-str (second (editorial-content 
-                                       (options :user-agent) 
-                                       arguments))))))
+    ; logger configuration
+    (timbre/set-config! [:appenders :spit :enabled?] true)
+    (timbre/set-config! [:shared-appender-config :spit-filename] 
+                        (options :log-file))
+    (timbre/set-config! [:appenders :standard-out :enabled?] false)
+
+    (let [[errors content] (editorial-content (options :user-agent) arguments)]
+      (do
+        (error-report errors)
+        (println (json/write-str content))
+        (System/exit 0)))))
 
 
