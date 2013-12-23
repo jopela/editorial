@@ -39,30 +39,32 @@
          def-user-agent "editorial v0.1.1 (jonathan.pelletier1@gmail.com)"]
      (editorial-content temps def-user-agent urls))))
 
+; ~~~~ command line argument parsing options
+(def cli-options
+  [["-h" "--help" "prints an help message and quit"]
+   ["-v" "--version" "print the current version number and quit"]
+   ["-u" "--user-agent AGENT" "the user-agent string that will be used for http requests (e.g: my-tool v0.1.1 (my@email.com))"]])
+
 (defn -main
   "Generate editorial content given lists of url."
   [& args]
-  (let [[opts arguments banner] 
-        (c/cli args
-          ["-h" "--help" "print this help banner and quit" :flag true]
-          ["-v" "--version" "print version info" :flag true]
-          ["-u" "--user-agent" "user agent string needed by some sources"]
-          ["-l" "--log-file" "path to the log file" ])]
+  (let [{:keys [options arguments summary errors]} (c/parse-opts args cli-options)]
 
-    (when (opts :help)
-      (println banner)
+    (when (options :help)
+      (println summary)
       (System/exit 0))
 
-    (when (opts :version)
+    (when (options :version)
       (println "v-0.1-alpha")
       (System/exit 0))
 
-    (when-not (opts :user-agent)
+    (when-not (options :user-agent)
       (println "you must specify a user-agent string with --user-agent.")
       (System/exit 0))
     
+    (println (c/parse-opts args cli-options))
     (println (json/write-str (second (editorial-content 
-                                       (opts :user-agent) 
-                                       args))))))
+                                       (options :user-agent) 
+                                       arguments))))))
 
 
