@@ -89,7 +89,8 @@
                  [:text "history"]]
                 [:section
                  [:title " Do "]
-                 [:text "do"]]]]}
+                 [:text "do"]]]]
+    :url "http://theshortone.com"}
    {:lang "en"
     :article [:article 
                [:abstract "text"]
@@ -102,18 +103,22 @@
                  [:text "voyager"]]
                 [:section
                  [:title " Cossin "]
-                 [:text "do"]]]]}])
+                 [:text "do"]]]]
+    :url "http://thelongone.com"}])
 
 (deftest template-article-dic-test-1
   (testing "when 2 section could make it into the final content, must pick
            the longest one"
     (let [in articles-data
           ex {"General_Information" {:understand {"en" {:title " Understand "
-                                                        :text "understand++"}}
+                                                        :text "understand++"
+                                                        :source "http://thelongone.com"}}
                                      :history {"en" {:title " History "
-                                                     :text "history"}}
+                                                     :text "history"
+                                                     :source "http://theshortone.com"}}
                                      :do {"en" {:title " Do "
-                                                :text "do"}}}}
+                                                :text "do"
+                                                :source "http://theshortone.com"}}}}
           ou (test-template articles-data)]
       (is (= ex ou)))))
 

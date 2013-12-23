@@ -58,8 +58,10 @@
                                      sec (logical-extract 
                                            default-section-mapping
                                            section 
-                                           (x :article))] 
-                               :when (not-nil? sec)] {lang sec})]
+                                           (x :article))
+                                     source {:source (x :url)}] 
+                               :when (not-nil? sec)] {lang 
+                                                      (merge sec source)})]
         (cond
           (= 0 (count logical-secs)) (recur res (rest left))
           :else (recur (assoc res
@@ -75,6 +77,6 @@
 ; mtrip general information template.
 (def general-information 
   (partial template-article-dic 
-           "General_Information" [:understand :history :do :climate :arts
-                                  :culture :food]))
+           "General_Information" [:introduction :understand :history :do 
+                                  :climate :arts :culture :food]))
 
