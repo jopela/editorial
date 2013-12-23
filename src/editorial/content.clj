@@ -5,7 +5,7 @@
 
 (defn source-dispatch                                                              
     "dispatch function for sources content fetcher"                                  
-    [url]
+    [url & args]
 
     (let [wikimedia #{"wikipedia" "wikivoyage" "wikidata"}                           
           domain (-> url                                                               
@@ -22,12 +22,11 @@
 (defmulti  source-data source-dispatch)
 
 (defmethod source-data :wikimedia 
-  [url]
-  (let [user-agent "mtrip.com content generator (pelletier@mtrip.com)"]
-    (sourcewiki/article user-agent url)))
+  [url user-agent]
+  (sourcewiki/article user-agent url))
 
 (defmethod source-data :default
-  [url]
+  [url user-agent]
   {:error (str "do not know how to transform " url " into a data structure."
                "if YOU know, add the relevent method to source-data.")})
 

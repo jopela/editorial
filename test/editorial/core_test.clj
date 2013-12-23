@@ -12,5 +12,5 @@
            first position of the result vector."
     (let [in url-err
           ou (editorial-content url-err)]
-      (is (> (count (first ou)) 0)))))
+      (is (= (count (first ou)) 1)))))
 
