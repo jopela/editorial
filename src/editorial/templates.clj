@@ -9,7 +9,6 @@
 
 (def default-section-mapping (utils/clean-logical-mapping 
                                dfns/logical-section-map))
-
 (defn merge-section
   "function to merge section"
   [& args]
@@ -79,4 +78,12 @@
   (partial template-article-dic 
            "General_Information" [:introduction :understand :history :do 
                                   :climate :arts :culture :food]))
+
+; to implement with .clj dat but find a way to load this from something
+; shared with people.
+(defn template-builder
+  "generates a list of template function given a template definition data 
+  structure."
+  [template-def]
+  [general-information])
 
