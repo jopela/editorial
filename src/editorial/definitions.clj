@@ -62,7 +62,7 @@
                  "概要"
                  "understand"}
 
-   :introduction #{"abstract"}
+   :introduction #{:abstract}
 
    :with-children #{"with children"}
 
@@ -98,7 +98,6 @@
               "歴史と文化"
               "歴史と概要"
               "歷史"}
-
 
   :climate #{"climate" 
              "Klima und Reisezeit" 

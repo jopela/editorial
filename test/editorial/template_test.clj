@@ -2,6 +2,7 @@
   (:require [clojure.test :refer :all]
             [editorial.templates :refer :all]
             [clojure.zip :as z]))
+
 (def sdt-1-in
   (->[:section
       [:title "history"]
@@ -14,12 +15,28 @@
 (def sdt-1-ex
   {:title "history" :text "hist of"})
 
+(def sdk-1-in
+  (-> [:abstract "text"]
+      z/vector-zip
+      z/down))
+
+(def sdk-1-ex
+  {:title "introduction" :text "text"})
+
+(def section-dic-keyword-1
+  (testing "should cast the element of a section into a dic when matched with
+           keyword"
+    (let [in sdk-1-in
+          ex sdk-1-ex
+          ou (section-dic-keyword :introduction in)]
+      (is (= ex ou)))))
+
 (deftest section-dic-test-1
   (testing "should be able to cast the element of a section into a dictionnaty
            that has a title and a text elem."
     (let [in sdt-1-in
           ex sdt-1-ex 
-          ou (section-dic in)]
+          ou (section-dic-title in)]
       (is (= ex ou)))))
            
 (def logical-extract-tree-1
@@ -52,7 +69,7 @@
 (deftest match-logical?-test-1
   (testing "when trimmed lowercase section title match one of the elements
            of the set, should return true"
-    (is (= true (match-logical? match-logical?-test-1-in-loc
+    (is (= true (match-logical-title? match-logical?-test-1-in-loc
                                 match-logical?-test-1-in-section)))))
 
 (deftest logical-extract-test-1
@@ -67,6 +84,22 @@
     (let [in logical-extract-tree-2
           ex {:title " Comprendre " :text "vous devez comprendre"}
           ou (logical-extract default-section-mapping :understand in)]
+      (is (= ex ou)))))
+
+(def logical-extract-tree-3
+  [:article
+   [:abstract "text"]
+   [:sections
+    [:section
+     [:title "history"]
+     [:text "the text"]]]])
+
+(deftest logical-extract-test-3
+  (testing "the abstract section should be considered the introduction and
+           it should be extracted if it is found in the section mapping."
+    (let [in logical-extract-tree-3
+          ex {:title "introduction" :text "text"}
+          ou (logical-extract default-section-mapping :introduction in)]
       (is (= ex ou)))))
 
 (deftest merge-section-test-1
@@ -119,6 +152,83 @@
                                      :do {"en" {:title " Do "
                                                 :text "do"
                                                 :source "http://theshortone.com"}}}}
-          ou (test-template articles-data)]
+          ou (test-template in)]
+      (is (= ex ou)))))
+
+;3 different sources, 2 different languages , each containing an introduction
+; and 2 containing a conflicting history section.
+(def articles-data-1-in
+  [{:lang "en"
+     :article [:article 
+               [:abstract "Long introduction (longest of en)"]
+               [:sections
+                [:section
+                 [:title " Understand "]
+                 [:text "long understand"]]
+                [:section
+                 [:title " History "]
+                 [:text "long history"]]
+                [:section
+                 [:title " Do "]
+                 [:text " long do "]]]]
+    :url "http://long.com"}
+
+   {:lang "en"
+    :article [:article 
+               [:abstract "short introduction"]
+               [:sections
+                [:section
+                 [:title " Understand "]
+                 [:text "understand"]]
+                [:section
+                 [:title " Voyager "]
+                 [:text "voyager"]]
+                [:section
+                 [:title " Cossin "]
+                 [:text "cossin"]]]]
+    :url "http://short.com"}
+
+   {:lang "fr"
+    :article [:article 
+               [:abstract "texte introductif"]
+               [:sections
+                [:section
+                 [:title " Comprendre "]
+                 [:text "des choses"]]
+                [:section
+                 [:title " Voyager "]
+                 [:text "voyage voyage"]]
+                [:section
+                 [:title " Cossin "]
+                 [:text "do"]]]]
+    :url "http://french.com"}])
+
+(def articles-data-1-ex
+  {"General_Information" {:introduction {"en" {:title "introduction"
+                                               :text "Long introduction (longest of en)"
+                                               :source "http://long.com"}
+                                         "fr" {:title "introduction" 
+                                               :text "texte introductif"
+                                               :source "http://french.com"}}
+                          :understand   {"en" {:title " Understand "
+                                               :text "long understand"
+                                               :source "http://long.com"}
+                                         "fr" {:title " Comprendre "
+                                               :text "des choses"
+                                               :source "http://french.com"}}
+                          :history      {"en" {:title " History "
+                                               :text "long history"
+                                               :source "http://long.com"}}
+                          :do           {"en" {:title " Do "
+                                               :text " long do "
+                                               :source "http://long.com"}}}})
+
+
+(deftest template-article-dic-test-2
+  (testing "all content from different article sources should be merged
+           into a single editorial content result"
+    (let [in articles-data-1-in
+          ex articles-data-1-ex
+          ou (test-template-1 in)]
       (is (= ex ou)))))
 
