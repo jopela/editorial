@@ -4,7 +4,8 @@
             [editorial.templates :as templates]
             [editorial.content :as content]
             [clojure.data.json :as json]
-            [taoensso.timbre :as timbre]))
+            [taoensso.timbre :as timbre]
+            [clojure.pprint :as pprint]))
 
 (timbre/refer-timbre)
 
@@ -27,7 +28,7 @@
       [errors (apply merge (rendering articles-data))])))
 
   ([user-agent urls]
-   (let [temps [templates/general-information]]
+   (let [temps (templates/definition-templates-load)]
      (editorial-content temps user-agent urls)))
 
   ([urls]
@@ -74,3 +75,5 @@
         (System/exit 0)))))
 
 
+(pprint/pprint (editorial-content ["http://en.wikipedia.org/wiki/Montreal"
+                                   "http://en.wikivoyage.org/wiki/Montreal"]))
