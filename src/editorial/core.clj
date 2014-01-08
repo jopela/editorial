@@ -31,8 +31,8 @@
      (editorial-content temps user-agent urls)))
 
   ([urls]
-   (let [temps [templates/general-information]
-         def-user-agent "editorial v0.1.1 (jonathan.pelletier1@gmail.com)"]
+   (let [temps (templates/definition-templates-load)
+         def-user-agent "editorial v0.1.1 (pelletier@mtrip.com)"]
      (editorial-content temps def-user-agent urls))))
 
 ; ~~~~ command line argument parsing options

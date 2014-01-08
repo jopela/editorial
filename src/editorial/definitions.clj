@@ -111,7 +111,7 @@
              "Погода" "气候" "気候"
              "気象" "氣候"}
 
-   :food #{"food" "manger" "eat"}
+  :food #{"food" "manger" "eat"}
 
   :culture #{"Kultur und Nachtleben"
              "art, culture and nightlife"

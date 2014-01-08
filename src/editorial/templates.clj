@@ -98,12 +98,10 @@
   (partial template-article-dic 
            "General_Information" [:introduction :understand :history :do 
                                   :climate :arts :culture :food]))
-
-; to implement with .clj dat but find a way to load this from something
-; shared with people.
-(defn template-builder
-  "generates a list of template function given a template definition data 
-  structure."
-  [template-def]
-  [general-information])
-
+(defn definition-templates-load
+  "generates a list of template function from the definitions.clj"
+  []
+  (letfn [(templater [x] (partial template-article-dic 
+                                  (x :title)
+                                  (x :sections)))]
+    (map templater dfns/templates-description)))
