@@ -74,6 +74,3 @@
         (println (json/write-str content))
         (System/exit 0)))))
 
-
-(pprint/pprint (editorial-content ["http://en.wikipedia.org/wiki/Montreal"
-                                   "http://en.wikivoyage.org/wiki/Montreal"]))
