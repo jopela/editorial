@@ -232,3 +232,41 @@
           ou (test-template-1 in)]
       (is (= ex ou)))))
 
+; test template for order preservation of section.
+(def order-template (partial template-article-dic "order" [:introduction
+                                                           :do
+                                                           :climate
+                                                           :history]))
+(def order-preserved-in 
+  [{:lang "en"
+     :article [:article 
+               [:abstract "introduction"]
+               [:sections
+                [:section
+                 [:title "history"]
+                 [:text "history text"]]
+                [:section
+                 [:title "do"]
+                 [:text "do text"]]
+                [:section
+                 [:title "climate"]
+                 [:text "climate text"]]]]
+    :url "http://order.com"}])
+
+(def order-preserved-ex
+  {"order" {:introduction {"en" {:title "introduction"
+                                               :text "introduction"
+                                               :source "http://order.com"}
+                           }
+                          :do {"en" {:title "do"
+                                               :text "do text"
+                                               :source "http://order.com"}}
+                          :climate {"en" {:title "climate"
+                                               :text "climate text"
+                                               :source "http://order.com"}}
+                          :history {"en" {:title "history"
+                                               :text "history text"
+                                               :source "http://order.com"}}}})
+
+
+

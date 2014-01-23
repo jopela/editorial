@@ -64,8 +64,8 @@
   template (e.g: General_Information). sections is the ordered list of section
   for this template (e.g [:introduction :understand ...]." 
   [title sections articles-data]
-  (loop [res {} 
-         left sections]
+  (loop [res (array-map)
+         left (reverse sections)]
     (if-let [section (first left)]
       (let [logical-secs (for [x articles-data 
                                :let [lang (x :lang) 

@@ -29,7 +29,6 @@
                :geography             
                :heritage-and-monuments
                :history               
-               :introduction          
                :islands               
                :landmarks             
                :parks-and-recreation  
@@ -95,7 +94,7 @@
     }
    {
     :title "Transport"
-    :section [
+    :sections [
               :get-around
               :public-transport
               ]
