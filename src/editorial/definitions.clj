@@ -11,7 +11,6 @@
     :title "General_information"
     :sections [
                :introduction
-               :architecture
                :architecture          
                :arts                  
                :beaches               
@@ -616,7 +615,8 @@
  :arts
  #{"art" "art dans la ville" "arts" "искусство и культура"
    "искусство"},
- :introduction #{:abstract},
+ :introduction 
+#{:abstract},
  :islands #{"islas" "isole" "islands"},
  :get-around
  #{"rondreizen" "circuler et conduire" "circule" "get around"

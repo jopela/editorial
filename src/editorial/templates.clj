@@ -2,7 +2,8 @@
   (:require [clojure.string :as string]
             [clojure.zip :as z]
             [editorial.definitions :as dfns]
-            [editorial.utils :as utils]))
+            [editorial.utils :as utils]
+            [clojure.pprint :as pprint]))
 
 ; The different article categories. There should be 1 template for each
 ; categories.
@@ -11,9 +12,9 @@
                                dfns/logical-section-map))
 
 (defn merge-section
-  "function to merge section"
+  "function to merge section based on the char count"
   [& args]
-  (letfn [(text-count[arg] (-> arg :text count))]
+  (letfn [(text-count [arg] (-> arg :text count))]
     (apply (partial max-key text-count) args)))
 
 (defn match-logical-title?
@@ -29,14 +30,14 @@
   [loc]
   (let [title (-> loc z/right z/node)
         text (-> loc z/up z/right z/down z/right z/node)]
-    {:title title :text text}))
+    (array-map :title title :text text)))
 
 (defn section-dic-keyword
   "extract the section dictionary from the current loc when we matched by 
   keyword."
   [logical-section loc]
   (let [text (-> loc z/right z/node)]
-    {:title (name logical-section) :text text}))
+    (array-map :title (name logical-section) :text text)))
 
 (defn logical-extract
   "walks the tree looking for the specified logical content and
@@ -64,8 +65,8 @@
   template (e.g: General_Information). sections is the ordered list of section
   for this template (e.g [:introduction :understand ...]." 
   [title sections articles-data]
-  (loop [res (array-map)
-         left (reverse sections)]
+  (loop [res (java.util.LinkedHashMap.)
+         left sections]
     (if-let [section (first left)]
       (let [logical-secs (for [x articles-data 
                                :let [lang (x :lang) 
@@ -73,15 +74,23 @@
                                            default-section-mapping
                                            section 
                                            (x :article))
-                                     source {:source (x :url)}] 
-                               :when (not-nil? sec)] {lang 
-                                                      (merge sec source)})]
+                                     source (array-map :source (x :url))] 
+                               :when (not-nil? sec)] (array-map lang 
+                                                      (merge sec source)))]
         (cond
           (= 0 (count logical-secs)) (recur res (rest left))
-          :else (recur (assoc res
-                       section (apply (partial merge-with merge-section) 
-                                      logical-secs)) (rest left))))
-      {title res})))
+          :else (recur (do  
+                         (.put 
+                           res
+                           section 
+                         (apply 
+                           (partial 
+                             merge-with 
+                             merge-section) 
+                           logical-secs))
+                        res) 
+                       (rest left))))
+      (array-map title res))))
 
 ; BEGIN used for testing only.
 (def test-template (partial template-article-dic 
@@ -105,3 +114,5 @@
                                   (x :title)
                                   (x :sections)))]
     (map templater dfns/templates-description)))
+
+

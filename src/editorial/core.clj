@@ -9,6 +9,8 @@
 
 (timbre/refer-timbre)
 
+(def test-templates [(first (templates/definition-templates-load))])
+
 (defn error-report
   "generates a human readable error report of the result of the editorial
   content generation."
@@ -71,6 +73,7 @@
     (let [[errors content] (editorial-content (options :user-agent) arguments)]
       (do
         (error-report errors)
-        (println (json/write-str content))
+        (json/write-str content )
         (System/exit 0)))))
+
 
