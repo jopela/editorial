@@ -73,7 +73,7 @@
     (let [[errors content] (editorial-content (options :user-agent) arguments)]
       (do
         (error-report errors)
-        (json/write-str content )
+        (println (json/write-str content))
         (System/exit 0)))))
 
 
