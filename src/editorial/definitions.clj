@@ -45,10 +45,11 @@
     {
      :title "Practical_Information"
      :sections [
+                 :get-in             
+                 :get-around
+                 :healthcare         
                  :connect            
                  :embassies          
-                 :get-in             
-                 :healthcare         
                  :learn              
                  :orientation        
                  :public-transport   
@@ -94,7 +95,6 @@
    {
     :title "Transport"
     :sections [
-              :get-around
               :public-transport
               ]
     }
