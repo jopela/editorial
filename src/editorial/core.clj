@@ -43,7 +43,10 @@
   [["-h" "--help" "prints an help message and quit"]
    ["-v" "--version" "print the current version number and quit"]
    ["-u" "--user-agent AGENT" "the user-agent string that will be used for http requests (e.g: my-tool v0.1.1 (my@email.com))"]
-   ["-l" "--log-file PATH" "the path to tge log file. Defaults to /var/log/editorial.log" :default "/var/log/editorial.log" ]])
+   ["-l" "--log-file PATH" "the path to the log file. Defaults to /var/log/editorial.log" :default "/var/log/editorial.log" ]
+   ["-t" "--template-def PATH" "the path to the file containing the template definition" :default "/etc/editorial/template.conf"]
+   ["-m" "--mapping-def PATH" "the path to the file containing the mapping definition" :default "/etc/editorial/mapping.conf"]
+   ])
 
 (defn -main
   "Generate editorial content given lists of url."
@@ -70,7 +73,8 @@
                         (options :log-file))
     (timbre/set-config! [:appenders :standard-out :enabled?] false)
 
-    (let [[errors content] (editorial-content (options :user-agent) arguments)]
+    (let [
+          [errors content] (editorial-content (options :user-agent) arguments)]
       (do
         (error-report errors)
         (println (json/write-str content))

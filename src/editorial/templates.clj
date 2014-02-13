@@ -1,7 +1,7 @@
 (ns editorial.templates
   (:require [clojure.string :as string]
             [clojure.zip :as z]
-            [editorial.definitions :as dfns]
+            [editorial.definitions :as definitions]
             [editorial.utils :as utils]
             [clojure.pprint :as pprint]))
 
@@ -9,7 +9,7 @@
 ; categories.
 
 (def default-section-mapping (utils/clean-logical-mapping 
-                               dfns/logical-section-map))
+                               definitions/logical-section-map))
 
 (defn merge-section
   "function to merge section based on the char count"
@@ -113,6 +113,13 @@
   (letfn [(templater [x] (partial template-article-dic 
                                   (x :title)
                                   (x :sections)))]
-    (map templater dfns/templates-description)))
+    (map templater definitions/templates-description)))
 
+(defn load-templates
+  "construct the template functions from the template config and mapping 
+  config files."
+  [template-filename mapping-filename]
+  (let [templates-definition (definitions/load-definition template-filename)
+        mapping-definition (definitions/load-definition mapping-filename)]
+    nil))
 

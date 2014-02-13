@@ -1,10 +1,10 @@
 (ns editorial.definitions)
 
-; data structure that describes what the template-articles are in terms of 
-; content. A template has a title and a list of section that will logically
-; group content together. Content for the logical section is pulled out of the 
-; different sources (wikipedia, wikivoyage etc). The order of the items in the 
-; section list is the order of appearance in the template article.
+(defn load-definition
+  "load definitions from a file"
+  [filename]
+  (load-string (slurp filename)))
+
 (def templates-description
   [
    {
