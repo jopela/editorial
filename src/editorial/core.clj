@@ -9,8 +9,6 @@
 
 (timbre/refer-timbre)
 
-(def test-templates [(first (templates/definition-templates-load))])
-
 (defn error-report
   "generates a human readable error report of the result of the editorial
   content generation."
@@ -21,22 +19,13 @@
 (defn editorial-content
   "fetch some content from the web and generates some articles based on the
   given template function."
-  ([templates user-agent urls]
-   (letfn [(error? [x] (contains? x :error))]
-    (let [articles-or-errors (map #(content/source-data % user-agent) urls)
-          articles-data (filter (complement error?) articles-or-errors)
-          errors (filter error? articles-or-errors)
-          rendering (apply juxt templates)]
-      [errors (apply merge (rendering articles-data))])))
-
-  ([user-agent urls]
-   (let [temps (templates/definition-templates-load)]
-     (editorial-content temps user-agent urls)))
-
-  ([urls]
-   (let [temps (templates/definition-templates-load)
-         def-user-agent "editorial v0.1.1 (pelletier@mtrip.com)"]
-     (editorial-content temps def-user-agent urls))))
+  [template-functions user-agent urls]
+  (letfn [(error? [x] (contains? x :error))]
+   (let [articles-or-errors (map #(content/source-data % user-agent) urls)
+         articles-data (filter (complement error?) articles-or-errors)
+         errors (filter error? articles-or-errors)
+         rendering (apply juxt template-functions)]
+     [errors (apply merge (rendering articles-data))])))
 
 ; ~~~~ command line argument parsing options
 (def cli-options
@@ -44,8 +33,8 @@
    ["-v" "--version" "print the current version number and quit"]
    ["-u" "--user-agent AGENT" "the user-agent string that will be used for http requests (e.g: my-tool v0.1.1 (my@email.com))"]
    ["-l" "--log-file PATH" "the path to the log file. Defaults to /var/log/editorial.log" :default "/var/log/editorial.log" ]
-   ["-t" "--template-def PATH" "the path to the file containing the template definition" :default "/etc/editorial/template.conf"]
-   ["-m" "--mapping-def PATH" "the path to the file containing the mapping definition" :default "/etc/editorial/mapping.conf"]
+   ["-t" "--templates PATH" "the path to the file containing the template definition" :default "/etc/editorial.d/templates.conf"]
+   ["-m" "--mappings PATH" "the path to the file containing the mapping definition" :default "/etc/editorial.d/mappings.conf"]
    ])
 
 (defn -main
@@ -73,8 +62,12 @@
                         (options :log-file))
     (timbre/set-config! [:appenders :standard-out :enabled?] false)
 
-    (let [
-          [errors content] (editorial-content (options :user-agent) arguments)]
+    (let [template-filename (options :templates)
+          mapping-filename (options :mappings)
+          template-functions (templates/load-templates template-filename 
+                                                       mapping-filename)
+          [errors content] (editorial-content template-functions
+                                              (options :user-agent) arguments)]
       (do
         (error-report errors)
         (println (json/write-str content))

@@ -2,14 +2,10 @@
   (:require [clojure.string :as string]
             [clojure.zip :as z]
             [editorial.definitions :as definitions]
-            [editorial.utils :as utils]
             [clojure.pprint :as pprint]))
 
 ; The different article categories. There should be 1 template for each
 ; categories.
-
-(def default-section-mapping (utils/clean-logical-mapping 
-                               definitions/logical-section-map))
 
 (defn merge-section
   "function to merge section based on the char count"
@@ -64,14 +60,14 @@
   mtrip representation of editorial content. title is the title given to the
   template (e.g: General_Information). sections is the ordered list of section
   for this template (e.g [:introduction :understand ...]." 
-  [title sections articles-data]
+  [title sections section-mapping articles-data]
   (loop [res (java.util.LinkedHashMap.)
          left sections]
     (if-let [section (first left)]
       (let [logical-secs (for [x articles-data 
                                :let [lang (x :lang) 
                                      sec (logical-extract 
-                                           default-section-mapping
+                                           section-mapping
                                            section 
                                            (x :article))
                                      source (array-map :source (x :url))] 
@@ -92,34 +88,15 @@
                        (rest left))))
       (array-map title res))))
 
-; BEGIN used for testing only.
-(def test-template (partial template-article-dic 
-                            "General_Information"
-                            [:understand :history :do :doubitchou]))
-
-(def test-template-1 (partial template-article-dic
-                              "General_Information"
-                              [:introduction :understand :history :do]))
-
-; END used for testing only.
-; mtrip general information template.
-(def general-information 
-  (partial template-article-dic 
-           "General_Information" [:introduction :understand :history :do 
-                                  :climate :arts :culture :food]))
-(defn definition-templates-load
-  "generates a list of template function from the definitions.clj"
-  []
-  (letfn [(templater [x] (partial template-article-dic 
-                                  (x :title)
-                                  (x :sections)))]
-    (map templater definitions/templates-description)))
-
 (defn load-templates
   "construct the template functions from the template config and mapping 
   config files."
   [template-filename mapping-filename]
   (let [templates-definition (definitions/load-definition template-filename)
         mapping-definition (definitions/load-definition mapping-filename)]
-    nil))
+    (letfn [(templater [x] (partial template-article-dic
+                                    (x :title)
+                                    (x :sections)
+                                    mapping-definition))]
+      (map templater templates-definition))))
 

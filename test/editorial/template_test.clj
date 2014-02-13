@@ -1,7 +1,23 @@
 (ns editorial.template-test
   (:require [clojure.test :refer :all]
             [editorial.templates :refer :all]
+            [editorial.definitions :as definitions]
             [clojure.zip :as z]))
+
+(def mapping-conf "/etc/editorial.d/mappings.conf")
+(def default-section-mapping (definitions/load-definition mapping-conf))
+
+(def test-template (partial template-article-dic
+                            "General_Information"
+                            [
+                             :history
+                             :do 
+                             :understand
+                             :architecture 
+                             :arts
+                             :respect
+                             ]
+                            default-section-mapping))
 
 (def sdt-1-in
   (->[:section
@@ -23,7 +39,7 @@
 (def sdk-1-ex
   {:title "introduction" :text "text"})
 
-(def section-dic-keyword-1
+(deftest section-dic-keyword-1
   (testing "should cast the element of a section into a dic when matched with
            keyword"
     (let [in sdk-1-in
@@ -229,44 +245,6 @@
            into a single editorial content result"
     (let [in articles-data-1-in
           ex articles-data-1-ex
-          ou (test-template-1 in)]
+          ou (test-template in)]
       (is (= ex ou)))))
-
-; test template for order preservation of section.
-(def order-template (partial template-article-dic "order" [:introduction
-                                                           :do
-                                                           :climate
-                                                           :history]))
-(def order-preserved-in 
-  [{:lang "en"
-     :article [:article 
-               [:abstract "introduction"]
-               [:sections
-                [:section
-                 [:title "history"]
-                 [:text "history text"]]
-                [:section
-                 [:title "do"]
-                 [:text "do text"]]
-                [:section
-                 [:title "climate"]
-                 [:text "climate text"]]]]
-    :url "http://order.com"}])
-
-(def order-preserved-ex
-  {"order" {:introduction {"en" {:title "introduction"
-                                               :text "introduction"
-                                               :source "http://order.com"}
-                           }
-                          :do {"en" {:title "do"
-                                               :text "do text"
-                                               :source "http://order.com"}}
-                          :climate {"en" {:title "climate"
-                                               :text "climate text"
-                                               :source "http://order.com"}}
-                          :history {"en" {:title "history"
-                                               :text "history text"
-                                               :source "http://order.com"}}}})
-
-
 
