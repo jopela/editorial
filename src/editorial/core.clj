@@ -55,7 +55,7 @@
     (when-not (options :user-agent)
       (println "you must specify a user-agent string with --user-agent.")
       (System/exit 0))
-    
+
     ; logger configuration
     (timbre/set-config! [:appenders :spit :enabled?] true)
     (timbre/set-config! [:shared-appender-config :spit-filename] 
