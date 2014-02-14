@@ -219,6 +219,18 @@
                  [:text "do"]]]]
     :url "http://french.com"}])
 
+(def test-template-1 (partial template-article-dic
+                            "General_Information"
+                            [
+                             :introduction
+                             :history
+                             :do 
+                             :understand
+                             :architecture 
+                             :arts
+                             :respect
+                             ]
+                            default-section-mapping))
 (def articles-data-1-ex
   {"General_Information" {:introduction {"en" {:title "introduction"
                                                :text "Long introduction (longest of en)"
@@ -245,6 +257,6 @@
            into a single editorial content result"
     (let [in articles-data-1-in
           ex articles-data-1-ex
-          ou (test-template in)]
+          ou (test-template-1 in)]
       (is (= ex ou)))))
 
