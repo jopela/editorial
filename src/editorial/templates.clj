@@ -56,7 +56,7 @@
 (def not-nil? (complement nil?))
 
 (defn template-article-dic
-  "map the article-data into a dictionary data structure that fits the current
+  " map the article-data into a dictionary data structure that fits the current
   mtrip representation of editorial content. title is the title given to the
   template (e.g: General_Information). sections is the ordered list of section
   for this template (e.g [:introduction :understand ...]." 
@@ -87,6 +87,7 @@
                         res) 
                        (rest left))))
       (array-map title res))))
+
 
 (defn load-templates
   "construct the template functions from the template config and mapping 
