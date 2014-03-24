@@ -35,6 +35,7 @@
    ["-l" "--log-file PATH" "the path to the log file. Defaults to /var/log/editorial.log" :default "/var/log/editorial.log" ]
    ["-t" "--templates PATH" "the path to the file containing the template definition" :default "/etc/editorial.d/templates.conf"]
    ["-m" "--mappings PATH" "the path to the file containing the mapping definition" :default "/etc/editorial.d/mappings.conf"]
+   ["-s" "--sectranslation PATH" "the path to the file containing the special section translation definition" :default "/etc/editorial.d/translations.conf"]
    ])
 
 (defn -main
@@ -64,8 +65,10 @@
 
     (let [template-filename (options :templates)
           mapping-filename (options :mappings)
+          translation-filename (options :sectranslation)
           template-functions (templates/load-templates template-filename 
-                                                       mapping-filename)
+                                                       mapping-filename
+                                                       translation-filename)
           [errors content] (editorial-content template-functions
                                               (options :user-agent) arguments)]
       (do

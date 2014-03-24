@@ -7,6 +7,9 @@
 (def mapping-conf "/etc/editorial.d/mappings.conf")
 (def default-section-mapping (definitions/load-definition mapping-conf))
 
+(def translation-conf "/etc/editorial.d/translations.conf")
+(def default-translation-mapping (definitions/load-definition translation-conf))
+
 (def test-template (partial template-article-dic
                             "General_Information"
                             [
@@ -17,11 +20,12 @@
                              :arts
                              :respect
                              ]
-                            default-section-mapping))
+                            default-section-mapping
+                            default-translation-mapping))
 
 (def sdt-1-in
   (->[:section
-      [:title "history"]
+      [:title " history "]
       [:text "hist of"]]
     z/vector-zip
     z/down
@@ -29,7 +33,7 @@
     z/down))
 
 (def sdt-1-ex
-  {:title "history" :text "hist of"})
+  {:title "History" :text "hist of"})
 
 (def sdk-1-in
   (-> [:abstract "text"]
@@ -37,14 +41,14 @@
       z/down))
 
 (def sdk-1-ex
-  {:title "introduction" :text "text"})
+  {:title "Introduction" :text "text"})
 
 (deftest section-dic-keyword-1
   (testing "should cast the element of a section into a dic when matched with
            keyword"
     (let [in sdk-1-in
           ex sdk-1-ex
-          ou (section-dic-keyword :introduction in)]
+          ou (section-dic-keyword "en" :introduction default-translation-mapping in)]
       (is (= ex ou)))))
 
 (deftest section-dic-test-1
@@ -91,15 +95,25 @@
 (deftest logical-extract-test-1
   (testing "should extract the history section when it is present"
     (let [in logical-extract-tree-1
-          ex {:title "history" :text "the history of *thing* is fascinating"}
-          ou (logical-extract default-section-mapping :history in)]
+          ex {:title "History" :text "the history of *thing* is fascinating"}
+          ou (logical-extract 
+               default-section-mapping 
+               :history 
+               "en" 
+               default-translation-mapping 
+               in)]
       (is (= ex ou)))))
 
 (deftest logical-extract-test-2
   (testing "should extract the understand section when it is present"
     (let [in logical-extract-tree-2
-          ex {:title " Comprendre " :text "vous devez comprendre"}
-          ou (logical-extract default-section-mapping :understand in)]
+          ex {:title "Comprendre" :text "vous devez comprendre"}
+          ou (logical-extract 
+               default-section-mapping 
+               :understand 
+               "fr" 
+               default-translation-mapping 
+               in)]
       (is (= ex ou)))))
 
 (def logical-extract-tree-3
@@ -114,8 +128,13 @@
   (testing "the abstract section should be considered the introduction and
            it should be extracted if it is found in the section mapping."
     (let [in logical-extract-tree-3
-          ex {:title "introduction" :text "text"}
-          ou (logical-extract default-section-mapping :introduction in)]
+          ex {:title "Интродукция" :text "text"}
+          ou (logical-extract 
+               default-section-mapping 
+               :introduction
+               "ru" 
+               default-translation-mapping 
+               in)]
       (is (= ex ou)))))
 
 (deftest merge-section-test-1
@@ -159,13 +178,13 @@
   (testing "when 2 section could make it into the final content, must pick
            the longest one"
     (let [in articles-data
-          ex {"General_Information" {:understand {"en" {:title " Understand "
+          ex {"General_Information" {:understand {"en" {:title "Understand"
                                                         :text "understand++"
                                                         :source "http://thelongone.com"}}
-                                     :history {"en" {:title " History "
+                                     :history {"en" {:title "History"
                                                      :text "history"
                                                      :source "http://theshortone.com"}}
-                                     :do {"en" {:title " Do "
+                                     :do {"en" {:title "Do"
                                                 :text "do"
                                                 :source "http://theshortone.com"}}}}
           ou (test-template in)]
@@ -230,24 +249,25 @@
                              :arts
                              :respect
                              ]
-                            default-section-mapping))
+                            default-section-mapping
+                            default-translation-mapping))
 (def articles-data-1-ex
-  {"General_Information" {:introduction {"en" {:title "introduction"
+  {"General_Information" {:introduction {"en" {:title "Introduction"
                                                :text "Long introduction (longest of en)"
                                                :source "http://long.com"}
-                                         "fr" {:title "introduction" 
+                                         "fr" {:title "Introduction" 
                                                :text "texte introductif"
                                                :source "http://french.com"}}
-                          :understand   {"en" {:title " Understand "
+                          :understand   {"en" {:title "Understand"
                                                :text "long understand"
                                                :source "http://long.com"}
-                                         "fr" {:title " Comprendre "
+                                         "fr" {:title "Comprendre"
                                                :text "des choses"
                                                :source "http://french.com"}}
-                          :history      {"en" {:title " History "
+                          :history      {"en" {:title "History"
                                                :text "long history"
                                                :source "http://long.com"}}
-                          :do           {"en" {:title " Do "
+                          :do           {"en" {:title "Do"
                                                :text " long do "
                                                :source "http://long.com"}}}})
 
@@ -259,4 +279,12 @@
           ex articles-data-1-ex
           ou (test-template-1 in)]
       (is (= ex ou)))))
+
+(deftest translate-logical-section-test-1
+  (testing "section keyword should be translated when they are in a
+           translation mapping. Should return (name keyword) otherwise"
+    (are [ex ou] (= ex ou)
+         "introduction" (translate-logical-section :introduction "en" default-translation-mapping)
+         "интродукция" (translate-logical-section :introduction "ru" default-translation-mapping)
+         "coco" (translate-logical-section :coco "en" default-translation-mapping))))
 

@@ -9,9 +9,13 @@
 
 (def template-conf "/etc/editorial.d/templates.conf")
 (def mapping-conf "/etc/editorial.d/mappings.conf")
+(def translate-conf "/etc/editorial.d/translations.conf")
 (def user-agent "editorial v0.1.1 jopela (pelletier@mtrip.com)")
 
-(def test-templates (templates/load-templates template-conf mapping-conf))
+(def test-templates (templates/load-templates 
+                      template-conf 
+                      mapping-conf 
+                      translate-conf))
 
 (deftest editorial-with-err-url
   (testing "when urls list contains bogus url for ed content generation, there
